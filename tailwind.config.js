@@ -13,11 +13,7 @@ export default {
         'quiz-bg': '#FFF9EF',
         'quiz-primary': '#930018',
         'quiz-text': '#40000F',
-        // Easily Editable structural colors for the 4 Communication Style types
-        'style-teacher': '#F4A261',
-        'style-role': '#E76F51',
-        'style-coach': '#2A9D8F',
-        'style-supporter': '#E9C46A',
+        // Per-style chart colors live in src/data/stylesData.js (STYLE_COLORS).
       }
     },
   },

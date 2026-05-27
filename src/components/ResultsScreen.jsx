@@ -1,27 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Share2, RotateCcw, ChevronDown } from 'lucide-react';
+import { Share2, RotateCcw } from 'lucide-react';
 import { exportAndShare } from '../skills/exportAndShare';
 import { announceToScreenReader } from '../skills/a11yUtils';
 
 export default function ResultsScreen({ resultsData, onRestart }) {
   const { allScores, topStyles } = resultsData;
-  const [expandedStyleIds, setExpandedStyleIds] = useState({});
-
-  const toggleExpanded = (styleId) => {
-    setExpandedStyleIds((prev) => ({ ...prev, [styleId]: !prev[styleId] }));
-  };
 
   useEffect(() => {
     const styleNames = topStyles.map(s => s.name).join(' and ');
-    announceToScreenReader(`Quiz complete. Your primary style is ${styleNames}.`);
+    announceToScreenReader(`Quiz complete. Your primary appreciation style is ${styleNames}.`);
   }, [topStyles]);
 
   const handleShare = () => {
-    exportAndShare('result-capture-area', 'my-communication-style.png');
+    exportAndShare('result-capture-area', 'my-appreciation-style.png');
   };
 
-  // Format data for Donut Chart
+  // Donut chart shows only styles that scored above zero so the chart doesn't
+  // render hairline slices for zero-scoring styles. The full breakdown below
+  // lists every style, including zeros.
   const chartData = useMemo(() => {
     return allScores.filter(s => s.score > 0).map(s => ({
       name: s.name,
@@ -34,7 +31,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
 
   return (
     <div className="w-full animate-fade-in flex flex-col items-center">
-      
+
       {/* CAPTURE AREA */}
       <div id="result-capture-area" className="w-full flex flex-col items-center p-2 sm:p-4 md:p-6 rounded-2xl">
         <h2 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-2">
@@ -43,7 +40,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
 
         {isTie ? (
           <h1 className="font-heading text-3xl md:text-4xl font-black text-quiz-text mb-2 text-center">
-            You are a Hybrid Communicator
+            You have a Hybrid Appreciation Style
           </h1>
         ) : (
           <h1 className="font-heading text-3xl md:text-5xl font-black text-quiz-text mb-2 text-center">
@@ -58,7 +55,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         )}
 
         {/* DONUT CHART (Recharts) */}
-        <div 
+        <div
           className="w-full h-64 md:h-80 my-4 flex justify-center"
           aria-label={`Donut chart showing score breakdown. Highest scores are ${topStyles.map(s=>s.name).join(', ')}.`}
           role="img"
@@ -79,7 +76,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip 
+              <Tooltip
                 formatter={(value, name) => [`${value} Points`, name]}
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
               />
@@ -87,13 +84,44 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           </ResponsiveContainer>
         </div>
 
-        {/* STYLE DESCRIPTIONS */}
+        {/* FULL BREAKDOWN — every style with its score, including zeros */}
+        <div className="w-full mt-2 mb-6">
+          <h3 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-3 text-center">
+            Your Full Breakdown
+          </h3>
+          <ul className="w-full flex flex-col gap-2">
+            {allScores.map((s) => {
+              const pct = s.maxPossible ? (s.score / s.maxPossible) * 100 : 0;
+              return (
+                <li key={s.id} className="w-full">
+                  <div className="flex items-center justify-between mb-1 text-sm">
+                    <span className="flex items-center gap-2 font-semibold text-quiz-text">
+                      <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }}></span>
+                      {s.name}
+                    </span>
+                    <span className="text-quiz-text/70 font-medium tabular-nums">
+                      {s.score}/{s.maxPossible}
+                    </span>
+                  </div>
+                  <div className="w-full h-2 bg-orange-50 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${pct}%`, backgroundColor: s.color }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* TOP STYLE DESCRIPTION(S) */}
         <div className="w-full flex flex-col gap-3 sm:gap-6 mt-4 sm:mt-6 text-left">
           {topStyles.map((style) => {
             const scored = allScores.find(s => s.id === style.id);
             return (
               <div key={style.id} className="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-orange-50 overflow-hidden">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-1">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                   <h3 className="text-xl sm:text-2xl font-bold text-quiz-text flex items-start gap-3 min-w-0 break-words">
                     <span className="w-4 h-4 mt-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }}></span>
                     <span className="min-w-0 break-words">{style.name}</span>
@@ -105,81 +133,10 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     </span>
                   )}
                 </div>
-                <p className="text-xs font-bold text-quiz-text/60 uppercase tracking-wide mb-4 mt-1">
-                  {style.subtitle}
+
+                <p className="text-sm sm:text-base text-quiz-text/90 leading-relaxed">
+                  {style.description}
                 </p>
-
-                <div className="mb-4 text-quiz-text/90">
-                  <strong className="text-quiz-primary">Priority:</strong> {style.priority} <span className="mx-1 text-quiz-text/40">|</span> <strong className="text-quiz-primary">Mantra:</strong> {style.mantra}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-green-50/50 p-3 sm:p-4 rounded-xl border border-green-100">
-                    <strong className="block text-green-800 mb-2 text-xs uppercase">Strengths</strong>
-                    <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-1">
-                      {style.strengths.map((str, i) => <li key={i}>{str}</li>)}
-                    </ul>
-                  </div>
-
-                  <div className="bg-red-50/50 p-3 sm:p-4 rounded-xl border border-red-100">
-                    <strong className="block text-quiz-primary mb-2 text-xs uppercase">Blind Spots</strong>
-                    <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-1">
-                      {style.blindSpots.map((bs, i) => <li key={i}>{bs}</li>)}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* FULL DESCRIPTION ACCORDION */}
-                {(style.strengthsDetailed?.length || style.blindSpotsDetailed?.length) && (() => {
-                  const isOpen = !!expandedStyleIds[style.id];
-                  const panelId = `style-details-${style.id}`;
-                  return (
-                    <div className="mt-4 border-t border-orange-100 pt-3">
-                      <button
-                        type="button"
-                        onClick={() => toggleExpanded(style.id)}
-                        aria-expanded={isOpen}
-                        aria-controls={panelId}
-                        className="w-full flex items-center justify-between gap-2 text-left text-sm font-bold text-quiz-primary hover:text-[#7a0014] focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 rounded-md px-1 py-1 transition-colors"
-                      >
-                        <span>{isOpen ? 'Hide full description' : 'Show full description'}</span>
-                        <ChevronDown
-                          size={18}
-                          className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-                          aria-hidden="true"
-                        />
-                      </button>
-
-                      {isOpen && (
-                        <div id={panelId} className="mt-4 grid md:grid-cols-2 gap-4 animate-fade-in">
-                          <div className="bg-green-50/50 p-3 sm:p-4 rounded-xl border border-green-100">
-                            <strong className="block text-green-800 mb-3 text-xs uppercase">Where You Might Shine</strong>
-                            <ul className="space-y-3 text-xs text-quiz-text/85">
-                              {style.strengthsDetailed.map((item, i) => (
-                                <li key={i}>
-                                  <p className="font-bold text-quiz-text mb-1">{item.title}</p>
-                                  <p className="leading-relaxed">{item.description}</p>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="bg-red-50/50 p-3 sm:p-4 rounded-xl border border-red-100">
-                            <strong className="block text-quiz-primary mb-3 text-xs uppercase">Where You Might Struggle</strong>
-                            <ul className="space-y-3 text-xs text-quiz-text/85">
-                              {style.blindSpotsDetailed.map((item, i) => (
-                                <li key={i}>
-                                  <p className="font-bold text-quiz-text mb-1">{item.title}</p>
-                                  <p className="leading-relaxed">{item.description}</p>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })()}
               </div>
             );
           })}
@@ -195,7 +152,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         >
           <Share2 size={20} /> Share Result
         </button>
-        
+
         <button
           onClick={onRestart}
           className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-white text-quiz-primary border-2 border-quiz-primary rounded-xl font-bold text-base hover:bg-orange-50 focus:outline-none focus:ring-4 focus:ring-quiz-primary/30 transition-all active:scale-95"

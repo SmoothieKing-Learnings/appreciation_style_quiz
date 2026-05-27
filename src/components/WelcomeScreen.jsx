@@ -14,7 +14,7 @@ export default function WelcomeScreen({ onStart }) {
         Discover Your Appreciation Style
       </h1>
       <p className="text-base md:text-lg text-quiz-text/80 mb-10 max-w-md">
-        Take this short assessment to uncover your primary style, strengths, and blind spots as a communicator.
+        Take this short assessment to discover how you most feel valued and appreciated at work.
       </p>
 
       <button

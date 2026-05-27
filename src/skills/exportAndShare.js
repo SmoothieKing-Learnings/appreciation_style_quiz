@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas';
 
-export const exportAndShare = async (elementId, filename = 'communication-style-result.png') => {
+export const exportAndShare = async (elementId, filename = 'appreciation-style-result.png') => {
   const element = document.getElementById(elementId);
   if (!element) {
     console.error(`Element with id ${elementId} not found`);
@@ -26,8 +26,8 @@ export const exportAndShare = async (elementId, filename = 'communication-style-
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
-            title: 'My Communication Style',
-            text: 'Check out my Communication Style Profile!',
+            title: 'My Appreciation Style',
+            text: 'Check out my Appreciation Style Profile!',
             files: [file]
           });
           return;
