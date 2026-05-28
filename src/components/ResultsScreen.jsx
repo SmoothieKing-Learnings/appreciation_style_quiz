@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import React, { useEffect } from 'react';
 import { Share2, RotateCcw } from 'lucide-react';
 import { exportAndShare } from '../skills/exportAndShare';
 import { announceToScreenReader } from '../skills/a11yUtils';
@@ -15,17 +14,6 @@ export default function ResultsScreen({ resultsData, onRestart }) {
   const handleShare = () => {
     exportAndShare('result-capture-area', 'my-appreciation-style.png');
   };
-
-  // Donut chart shows only styles that scored above zero so the chart doesn't
-  // render hairline slices for zero-scoring styles. The full breakdown below
-  // lists every style, including zeros.
-  const chartData = useMemo(() => {
-    return allScores.filter(s => s.score > 0).map(s => ({
-      name: s.name,
-      value: s.score,
-      color: s.color
-    }));
-  }, [allScores]);
 
   const isTie = topStyles.length > 1;
 
@@ -53,67 +41,6 @@ export default function ResultsScreen({ resultsData, onRestart }) {
             Your primary styles are {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' and ', curr])}
           </p>
         )}
-
-        {/* DONUT CHART (Recharts) */}
-        <div
-          className="w-full h-64 md:h-80 my-4 flex justify-center"
-          aria-label={`Donut chart showing score breakdown. Highest scores are ${topStyles.map(s=>s.name).join(', ')}.`}
-          role="img"
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={100}
-                paddingAngle={5}
-                dataKey="value"
-                stroke="none"
-              >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value, name) => [`${value} Points`, name]}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* FULL BREAKDOWN — every style with its score, including zeros */}
-        <div className="w-full mt-2 mb-6">
-          <h3 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-3 text-center">
-            Your Full Breakdown
-          </h3>
-          <ul className="w-full flex flex-col gap-2">
-            {allScores.map((s) => {
-              const pct = s.maxPossible ? (s.score / s.maxPossible) * 100 : 0;
-              return (
-                <li key={s.id} className="w-full">
-                  <div className="flex items-center justify-between mb-1 text-sm">
-                    <span className="flex items-center gap-2 font-semibold text-quiz-text">
-                      <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }}></span>
-                      {s.name}
-                    </span>
-                    <span className="text-quiz-text/70 font-medium tabular-nums">
-                      {s.score}/{s.maxPossible}
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-orange-50 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{ width: `${pct}%`, backgroundColor: s.color }}
-                    />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
 
         {/* TOP STYLE DESCRIPTION(S) */}
         <div className="w-full flex flex-col gap-3 sm:gap-6 mt-4 sm:mt-6 text-left">
