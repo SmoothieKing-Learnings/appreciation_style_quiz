@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ProgressBar from './ProgressBar';
 import { QUESTIONS } from '../data/questionsData';
 import { announceToScreenReader } from '../skills/a11yUtils';
-import { isEmbedded } from '../skills/embed';
 
 // Fisher-Yates shuffle — returns a new shuffled array, never mutates the original
 function shuffleArray(arr) {
@@ -15,7 +14,6 @@ function shuffleArray(arr) {
 }
 
 export default function QuizScreen({ onComplete }) {
-  const embedded = isEmbedded();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   // Shuffle question order AND option order within each question once on mount.
@@ -65,26 +63,21 @@ export default function QuizScreen({ onComplete }) {
     }
   };
 
-  // min-h-[900px] equalizes the QuizScreen across all 5 questions so the card
-  // doesn't grow/shrink between Q1 (short) and Q2 (longest). 900px fits the
-  // tallest question (Q2: 3-line header + longest options + back link) on
-  // desktop with a small buffer. Mobile content may exceed 900px naturally,
-  // which is fine — min-h is a floor, not a cap.
-  //
-  // When embedded, also use justify-around so any extra iframe height is
-  // distributed evenly across progress / question / options / buttons.
+  // h-[720px] locks the QuizScreen to a fixed 720px tall card across all 5
+  // questions. The footer (Back + Next on one row) uses mt-auto so it sticks
+  // to the bottom regardless of how short or tall the question content is.
   return (
-    <div className={`w-full flex flex-col items-center animate-fade-in text-left min-h-[900px] py-2 ${embedded ? 'justify-around' : ''}`}>
+    <div className="w-full h-[720px] flex flex-col items-stretch text-left animate-fade-in py-2">
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
       <h2
-        className={`font-heading text-xl sm:text-2xl md:text-3xl font-bold text-quiz-text w-full leading-snug ${embedded ? '' : 'mb-4 sm:mb-8'}`}
+        className="font-heading text-base sm:text-lg md:text-xl font-bold text-quiz-text w-full leading-snug mb-2 sm:mb-3"
         aria-live="polite"
       >
         {currentQuestion.text}
       </h2>
 
-      <div className="w-full flex flex-col gap-2 sm:gap-4">
+      <div className="w-full flex flex-col gap-1 sm:gap-2">
         {currentQuestion.options.map((option, idx) => {
           const isSelected = selectedAnswer === option.styleId;
           return (
@@ -94,7 +87,7 @@ export default function QuizScreen({ onComplete }) {
               tabIndex={0}
               onClick={() => handleOptionSelect(option.styleId)}
               onKeyDown={(e) => handleKeyDown(e, option.styleId)}
-              className={`w-full min-h-[44px] p-3 sm:p-5 rounded-xl border-2 transition-all cursor-pointer shadow-sm
+              className={`w-full min-h-[44px] p-2 sm:p-3 rounded-xl border-2 transition-all cursor-pointer shadow-sm
                 ${isSelected
                   ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
                   : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
@@ -102,42 +95,42 @@ export default function QuizScreen({ onComplete }) {
               aria-label={`Option ${idx + 1}: ${option.text}`}
               aria-pressed={isSelected}
             >
-              <span className="text-base font-medium text-quiz-text">{option.text}</span>
+              <span className="text-sm sm:text-base font-medium text-quiz-text">{option.text}</span>
             </div>
           );
         })}
       </div>
 
-      {/* Continue button — only active when a selection is made */}
-      <button
-        onClick={handleContinue}
-        disabled={!selectedAnswer}
-        className={`w-full py-4 px-5 sm:py-5 sm:px-6 rounded-xl font-bold text-white transition-all duration-300 shadow-lg scale-[1.00] active:scale-95
-          ${embedded ? '' : 'mt-6 sm:mt-10'}
-          ${selectedAnswer
-            ? 'bg-quiz-primary hover:bg-red-800'
-            : 'bg-gray-300 cursor-not-allowed opacity-50 grayscale shadow-none hover:bg-gray-300'
-          }`}
-      >
-        <span className="text-lg">
-          {isLastQuestion ? 'See My Results' : 'Next Question'}
-        </span>
-      </button>
+      {/* Footer row: Back (if any) + Next on a single row, pinned to the bottom */}
+      <div className="w-full mt-auto pt-3 flex items-center gap-2 sm:gap-3">
+        {currentQuestionIndex > 0 && (
+          <button
+            onClick={handleGoBack}
+            type="button"
+            className="flex items-center gap-1 min-h-[44px] px-3 py-2 text-sm font-semibold text-quiz-primary hover:text-orange-700 hover:bg-orange-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 transition-colors whitespace-nowrap"
+            aria-label="Go back to the previous question"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back
+          </button>
+        )}
 
-      {/* Back button — only visible after the first question */}
-      {currentQuestionIndex > 0 && (
         <button
-          onClick={handleGoBack}
-          className={`flex items-center gap-2 text-xs text-quiz-primary hover:text-orange-700 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 rounded-lg px-3 py-2 hover:bg-orange-50 ${embedded ? '' : 'mt-8'}`}
-          aria-label="Go back to the previous question"
+          onClick={handleContinue}
+          disabled={!selectedAnswer}
+          className={`flex-1 min-h-[44px] py-3 px-4 rounded-xl font-bold text-white transition-all duration-300 shadow-lg active:scale-95
+            ${selectedAnswer
+              ? 'bg-quiz-primary hover:bg-red-800'
+              : 'bg-gray-300 cursor-not-allowed opacity-50 grayscale shadow-none hover:bg-gray-300'
+            }`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back to previous question
+          <span className="text-base">
+            {isLastQuestion ? 'See My Results' : 'Next Question'}
+          </span>
         </button>
-      )}
+      </div>
     </div>
   );
 }
-
