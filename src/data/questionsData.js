@@ -24,8 +24,8 @@ export const QUESTIONS = [
     options: [
       { id: 'q2-a', text: 'A genuine shout-out at the next huddle in front of the team.', styleId: 'words_of_affirmation' },
       { id: 'q2-b', text: 'Your manager finds a quiet moment to personally thank you and ask how you\'re holding up.', styleId: 'quality_time' },
-      { id: 'q2-c', text: 'Your manager makes your next shift a little easier — more prep, or switching your open to a close the next day so you don\'t close then open.', styleId: 'acts_of_service' },
-      { id: 'q2-d', text: 'Something small but real — a smoothie on your break, a note with your check.', styleId: 'tangible_gifts' },
+      { id: 'q2-c', text: 'Your manager makes your next shift a little easier, more prep or switching your open to a close the next day so you don\'t close then open.', styleId: 'acts_of_service' },
+      { id: 'q2-d', text: 'Something small but real, a smoothie on your break, a note with your check.', styleId: 'tangible_gifts' },
       { id: 'q2-e', text: 'A quick fist-bump and "I owe you one" the moment you walk in.', styleId: 'physical_touch' }
     ]
   },
@@ -35,9 +35,9 @@ export const QUESTIONS = [
     options: [
       { id: 'q3-a', text: 'They tell me directly what they think of my work, often and specifically.', styleId: 'words_of_affirmation' },
       { id: 'q3-b', text: 'They remember things about my life outside work and actually ask about them.', styleId: 'quality_time' },
-      { id: 'q3-c', text: 'They work alongside me — they don\'t just manage, they get in the trenches.', styleId: 'acts_of_service' },
+      { id: 'q3-c', text: 'They work alongside me, they don\'t just manage, they get in the trenches.', styleId: 'acts_of_service' },
       { id: 'q3-d', text: 'They mark the small milestones like birthdays or work milestones with a thoughtful card.', styleId: 'tangible_gifts' },
-      { id: 'q3-e', text: 'They bring the energy — the high-fives, the team celebrations, the shared wins.', styleId: 'physical_touch' }
+      { id: 'q3-e', text: 'They bring the energy, the high-fives, the team celebrations, the shared wins.', styleId: 'physical_touch' }
     ]
   },
   {
@@ -56,10 +56,10 @@ export const QUESTIONS = [
     text: 'Looking back at a job, team or class where you felt truly valued, what made the difference?',
     options: [
       { id: 'q5-a', text: 'My leader or teacher regularly told me what I was doing right and what made me stand out.', styleId: 'words_of_affirmation' },
-      { id: 'q5-b', text: 'My leader or teacher actually knew me — not just my performance, but who I was as a person.', styleId: 'quality_time' },
+      { id: 'q5-b', text: 'My leader or teacher actually knew me, not just my performance, but who I was as a person.', styleId: 'quality_time' },
       { id: 'q5-c', text: 'My leader or teacher worked hard alongside us and never asked anyone to do something they wouldn\'t do.', styleId: 'acts_of_service' },
       { id: 'q5-d', text: 'My leader or teacher noticed and marked the milestones, making small gestures that showed they were paying attention.', styleId: 'tangible_gifts' },
-      { id: 'q5-e', text: 'My manager brought the team energy — the kind you could feel the moment you walked in.', styleId: 'physical_touch' }
+      { id: 'q5-e', text: 'My manager brought the team energy, the kind you could feel the moment you walked in.', styleId: 'physical_touch' }
     ]
   }
 ];
