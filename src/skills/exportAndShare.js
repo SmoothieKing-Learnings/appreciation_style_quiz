@@ -29,9 +29,9 @@ export const exportAndShare = async (
   const quizUrl = typeof window !== 'undefined'
     ? `${window.location.origin}${import.meta.env.BASE_URL || '/'}`
     : '';
-  // URL is appended to the text (receivers that strip the `url` field when
-  // `files` is present still surface it this way) AND passed as `url` so
-  // receivers that do use it can preview/link it cleanly.
+  // URL is appended to the text only. We intentionally do NOT also pass it
+  // as the `url` field — receivers that honor both render the link twice
+  // (once inline from text, once as a preview card from `url`).
   const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence}${quizUrl ? ` ${quizUrl}` : ''}`;
 
   try {
@@ -55,7 +55,6 @@ export const exportAndShare = async (
           await navigator.share({
             title: shareTitle,
             text: shareText,
-            url: quizUrl || undefined,
             files: [file]
           });
           return;
