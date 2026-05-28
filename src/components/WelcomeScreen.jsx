@@ -97,14 +97,10 @@ export default function WelcomeScreen({ onStart }) {
         Take this short assessment to discover how you most feel valued and appreciated at work.
       </motion.p>
 
-      {/* Element 5 — CTAs block */}
       {/* gap-1 = 4px so input ↔ CTA ↔ helper all sit on the same 4px rhythm */}
-      <motion.form
+      <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm flex flex-col items-stretch gap-1"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.50, duration: 0.40 }}
       >
         <label htmlFor="user-name" className="text-sm font-semibold text-quiz-text text-left">
           Enter your name to start the quiz
@@ -132,22 +128,30 @@ export default function WelcomeScreen({ onStart }) {
             }`}
         />
 
-        <button
-          type="submit"
-          className={`w-full min-h-[44px] px-8 py-4 mt-0 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all
-            ${canSubmit
-              ? 'opacity-100 shadow-lg hover:bg-[#7a0014] hover:shadow-xl active:scale-95'
-              : 'opacity-40 shadow-none'
-            }`}
-          aria-label="Start the Appreciation Style Quiz"
+        {/* Element 5 — CTA block (motion.div wrapping the button) */}
+        <motion.div
+          className="w-full"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.50, duration: 0.40 }}
         >
-          Let's Blend!
-        </button>
+          <button
+            type="submit"
+            className={`w-full min-h-[44px] px-8 py-4 mt-0 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all
+              ${canSubmit
+                ? 'opacity-100 shadow-lg hover:bg-[#7a0014] hover:shadow-xl active:scale-95'
+                : 'opacity-40 shadow-none'
+              }`}
+            aria-label="Start the Appreciation Style Quiz"
+          >
+            Let's Blend!
+          </button>
+        </motion.div>
 
         <p id="user-name-hint" className="text-xs text-quiz-text/50 text-center">
           Used only in your results headline. Not stored anywhere.
         </p>
-      </motion.form>
+      </form>
     </div>
   );
 }
