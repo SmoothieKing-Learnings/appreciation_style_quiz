@@ -63,17 +63,17 @@ export default function QuizScreen({ onComplete }) {
     }
   };
 
-  // h-[720px] locks the QuizScreen to a fixed 720px tall card across all 5
+  // h-[680px] locks the QuizScreen to a fixed 680px tall card across all 5
   // questions. The options container takes flex-1 and each option inside
   // also takes flex-1, so all 5 options share whatever vertical space is
   // left between the question header and the footer evenly. Text inside
   // each option is vertically centered so the card looks balanced.
   return (
-    <div className="w-full h-[720px] flex flex-col items-stretch text-left animate-fade-in py-2">
+    <div className="w-full h-[680px] flex flex-col items-stretch text-left animate-fade-in py-2">
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
       <h2
-        className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-2 sm:mb-3"
+        className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-6 sm:mb-8"
         aria-live="polite"
       >
         {currentQuestion.text}
