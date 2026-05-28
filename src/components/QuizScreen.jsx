@@ -64,20 +64,22 @@ export default function QuizScreen({ onComplete }) {
   };
 
   // h-[720px] locks the QuizScreen to a fixed 720px tall card across all 5
-  // questions. The footer (Back + Next on one row) uses mt-auto so it sticks
-  // to the bottom regardless of how short or tall the question content is.
+  // questions. The options container takes flex-1 and each option inside
+  // also takes flex-1, so all 5 options share whatever vertical space is
+  // left between the question header and the footer evenly. Text inside
+  // each option is vertically centered so the card looks balanced.
   return (
     <div className="w-full h-[720px] flex flex-col items-stretch text-left animate-fade-in py-2">
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
       <h2
-        className="font-heading text-base sm:text-lg md:text-xl font-bold text-quiz-text w-full leading-snug mb-2 sm:mb-3"
+        className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-2 sm:mb-3"
         aria-live="polite"
       >
         {currentQuestion.text}
       </h2>
 
-      <div className="w-full flex flex-col gap-1 sm:gap-2">
+      <div className="w-full flex-1 flex flex-col gap-1 sm:gap-2 min-h-0">
         {currentQuestion.options.map((option, idx) => {
           const isSelected = selectedAnswer === option.styleId;
           return (
@@ -87,7 +89,7 @@ export default function QuizScreen({ onComplete }) {
               tabIndex={0}
               onClick={() => handleOptionSelect(option.styleId)}
               onKeyDown={(e) => handleKeyDown(e, option.styleId)}
-              className={`w-full min-h-[44px] p-2 sm:p-3 rounded-xl border-2 transition-all cursor-pointer shadow-sm
+              className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-2 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
                 ${isSelected
                   ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
                   : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
@@ -102,7 +104,7 @@ export default function QuizScreen({ onComplete }) {
       </div>
 
       {/* Footer row: Back (if any) + Next on a single row, pinned to the bottom */}
-      <div className="w-full mt-auto pt-3 flex items-center gap-2 sm:gap-3">
+      <div className="w-full pt-3 flex items-center gap-2 sm:gap-3">
         {currentQuestionIndex > 0 && (
           <button
             onClick={handleGoBack}
