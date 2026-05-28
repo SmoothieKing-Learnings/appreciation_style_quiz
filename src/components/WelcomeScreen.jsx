@@ -10,11 +10,13 @@ export default function WelcomeScreen({ onStart }) {
   const embedded = isEmbedded();
   const [name, setName] = useState('');
 
+  const trimmedName = name.trim();
+  const canSubmit = trimmedName.length > 0;
+
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
-    // Trim on submit. Name is optional — empty string is fine and triggers
-    // the fallback "You" copy on the results screen.
-    onStart(name.trim());
+    if (!canSubmit) return;
+    onStart(trimmedName);
   };
 
   return (
@@ -27,16 +29,17 @@ export default function WelcomeScreen({ onStart }) {
         Take this short assessment to discover how you most feel valued and appreciated at work.
       </p>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-sm flex flex-col items-center gap-5">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm flex flex-col items-stretch gap-5">
         <div className="w-full text-left">
           <label htmlFor="user-name" className="block text-sm font-semibold text-quiz-text mb-2">
-            Your name <span className="text-quiz-text/50 font-normal">(optional)</span>
+            Your name
           </label>
           <input
             id="user-name"
             type="text"
             inputMode="text"
             autoComplete="off"
+            required
             maxLength={NAME_MAX}
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -54,7 +57,12 @@ export default function WelcomeScreen({ onStart }) {
 
         <button
           type="submit"
-          className="min-h-[44px] min-w-[44px] px-8 py-4 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-lg hover:shadow-xl active:scale-95"
+          disabled={!canSubmit}
+          className={`w-full min-h-[44px] px-8 py-4 rounded-xl font-bold text-base text-[#FFF9EF] transition-all shadow-lg
+            ${canSubmit
+              ? 'bg-quiz-primary hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 hover:shadow-xl active:scale-95'
+              : 'bg-gray-300 cursor-not-allowed opacity-60 shadow-none hover:bg-gray-300'
+            }`}
           aria-label="Start the Appreciation Style Quiz"
         >
           Let's Blend!
