@@ -1,5 +1,10 @@
 import html2canvas from 'html2canvas';
 
+// Canonical public URL of the quiz. Pinned so the share message always
+// directs recipients to the live GitHub Pages site, regardless of whether
+// the share is triggered from local dev, the live site, or a Rise 360 iframe.
+const QUIZ_URL = 'https://smoothieking-learnings.github.io/appreciation_style_quiz/';
+
 /**
  * Capture an element as PNG and trigger the Web Share sheet (or download fallback).
  *
@@ -24,15 +29,10 @@ export const exportAndShare = async (
   const subject = userName ? `${userName}'s` : 'my';
   const styleSentence = styleName ? ` My appreciation style is ${styleName}.` : '';
   const shareTitle = userName ? `${userName}'s Appreciation Style` : 'My Appreciation Style';
-  // Canonical quiz URL derived from window.location + Vite base path so it
-  // stays correct on local dev, the GitHub Pages site, and inside any iframe.
-  const quizUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}${import.meta.env.BASE_URL || '/'}`
-    : '';
   // URL is appended to the text only. We intentionally do NOT also pass it
   // as the `url` field — receivers that honor both render the link twice
   // (once inline from text, once as a preview card from `url`).
-  const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence}${quizUrl ? ` ${quizUrl}` : ''}`;
+  const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence} ${QUIZ_URL}`;
 
   try {
     const canvas = await html2canvas(element, {
