@@ -14,7 +14,7 @@ Configured via Tailwind CSS with a warm palette constraint:
 - **Chart Colors**: Five distinct complementary colors (`#6A4C93`, `#2A9D8F`, `#E76F51`, `#E9C46A`, `#F4A261`) — one per style — defined in `src/data/stylesData.js` for easy editing.
 
 ### Deployment Context
-- Configured specifically for **GitHub Pages** (URL: `https://daechan-ot.github.io/Appreciation_style_quiz/`).
+- Configured specifically for **GitHub Pages** (URL: `https://smoothieking-learnings.github.io/appreciation_style_quiz/`).
 - **Base Pathing**: Set in `vite.config.js` to ensure assets avoid 404 errors.
 - **Routing**: Employs static React state-based rendering (`currentScreen`) to completely bypass `react-router-dom` 404 errors standard to static site refreshes.
 

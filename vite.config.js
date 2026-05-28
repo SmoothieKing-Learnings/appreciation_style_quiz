@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // GitHub Pages deployment config
-  base: '/Appreciation_style_quiz/',
+  base: '/appreciation_style_quiz/',
   test: {
     environment: 'jsdom',
     globals: true,
