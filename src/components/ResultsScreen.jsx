@@ -57,14 +57,14 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
           {topStyles.map((style) => {
             const scored = allScores.find(s => s.id === style.id);
             return (
-              <div key={style.id} className="bg-white p-3 rounded-2xl shadow-sm border border-orange-50 overflow-hidden">
+              <div key={style.id} className="bg-white p-3 rounded-2xl shadow-sm border border-orange-100 overflow-hidden">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                   <h3 className="text-xl sm:text-2xl font-bold text-quiz-text flex items-start gap-3 min-w-0 break-words">
                     <span className="w-4 h-4 mt-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }}></span>
                     <span className="min-w-0 break-words">{style.name}</span>
                   </h3>
                   {scored && (
-                    <span className="self-start flex-shrink-0 text-xs font-bold px-3 py-1 rounded-full text-white whitespace-nowrap"
+                    <span className="self-start flex-shrink-0 text-xs font-bold px-3 py-1 rounded-full text-quiz-bg whitespace-nowrap"
                       style={{ backgroundColor: style.color }}>
                       {scored.score}/{scored.maxPossible} pts
                     </span>
@@ -84,7 +84,7 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
       <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-4 sm:mt-6">
         <button
           onClick={handleShare}
-          className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+          className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
           aria-label="Share or download my result image"
         >
           <Share2 size={20} /> Share Result
@@ -92,7 +92,7 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
 
         <button
           onClick={onRestart}
-          className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-white text-quiz-primary border-2 border-quiz-primary rounded-xl font-bold text-base hover:bg-orange-50 focus:outline-none focus:ring-4 focus:ring-quiz-primary/30 transition-all active:scale-95"
+          className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-white text-quiz-primary border-2 border-quiz-primary rounded-xl font-bold text-base hover:bg-interactive-cream focus:outline-none focus:ring-4 focus:ring-quiz-primary/30 transition-all active:scale-95"
           aria-label="Retake the quiz"
         >
           <RotateCcw size={20} /> Retake Quiz

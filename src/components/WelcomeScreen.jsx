@@ -123,7 +123,7 @@ export default function WelcomeScreen({ onStart }) {
           aria-describedby="user-name-hint"
           className={`w-full min-h-[44px] px-4 py-3 bg-white border-2 rounded-xl text-quiz-text placeholder-quiz-text/40 focus:outline-none transition-colors
             ${showInvalid
-              ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-300'
+              ? 'border-error bg-error-light focus:border-error focus:ring-2 focus:ring-error-soft'
               : 'border-orange-100 focus:border-quiz-primary focus:ring-2 focus:ring-quiz-primary/30'
             }`}
         />
@@ -137,9 +137,9 @@ export default function WelcomeScreen({ onStart }) {
         >
           <button
             type="submit"
-            className={`w-full min-h-[44px] px-8 py-4 mt-0 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all
+            className={`w-full min-h-[44px] px-8 py-4 mt-0 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all
               ${canSubmit
-                ? 'opacity-100 shadow-lg hover:bg-[#7a0014] hover:shadow-xl active:scale-95'
+                ? 'opacity-100 shadow-lg hover:bg-brand-dark hover:shadow-xl active:scale-95'
                 : 'opacity-40 shadow-none'
               }`}
             aria-label="Start the Appreciation Style Quiz"
