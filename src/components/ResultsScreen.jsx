@@ -114,7 +114,7 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
         {/* TOP STYLE DESCRIPTION(S) */}
         <div className="w-full flex flex-col gap-3 text-left">
           {topStyles.map((style) => (
-            <div key={style.id} className="shadow-sm overflow-hidden">
+            <div key={style.id} className="overflow-hidden">
               <p className="text-xs text-quiz-text/80 leading-relaxed">
                 {style.description}
               </p>
