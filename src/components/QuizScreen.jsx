@@ -65,11 +65,16 @@ export default function QuizScreen({ onComplete }) {
     }
   };
 
-  // When embedded, fill 80% of the viewport (iframe) height so the quiz has
-  // breathing room top and bottom. justify-around distributes spacing across
-  // progress / question / options / button.
+  // min-h-[900px] equalizes the QuizScreen across all 5 questions so the card
+  // doesn't grow/shrink between Q1 (short) and Q2 (longest). 900px fits the
+  // tallest question (Q2: 3-line header + longest options + back link) on
+  // desktop with a small buffer. Mobile content may exceed 900px naturally,
+  // which is fine — min-h is a floor, not a cap.
+  //
+  // When embedded, also use justify-around so any extra iframe height is
+  // distributed evenly across progress / question / options / buttons.
   return (
-    <div className={`w-full flex flex-col items-center animate-fade-in text-left ${embedded ? 'min-h-[80vh] justify-around py-2' : ''}`}>
+    <div className={`w-full flex flex-col items-center animate-fade-in text-left min-h-[900px] py-2 ${embedded ? 'justify-around' : ''}`}>
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
       <h2
