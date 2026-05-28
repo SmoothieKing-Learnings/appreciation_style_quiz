@@ -9,8 +9,11 @@ import { STYLES } from './data/stylesData';
 function App() {
   const [currentScreen, setCurrentScreen] = useState('welcome');
   const [resultsData, setResultsData] = useState(null);
+  // Held only in memory for this session; cleared on restart and on unload.
+  const [userName, setUserName] = useState('');
 
-  const startQuiz = () => {
+  const startQuiz = (name) => {
+    setUserName(name || '');
     setCurrentScreen('quiz');
   };
 
@@ -22,6 +25,7 @@ function App() {
 
   const restartQuiz = () => {
     setResultsData(null);
+    setUserName('');
     setCurrentScreen('welcome');
   };
 
@@ -30,7 +34,7 @@ function App() {
       {currentScreen === 'welcome' && <WelcomeScreen onStart={startQuiz} />}
       {currentScreen === 'quiz' && <QuizScreen onComplete={handleQuizComplete} />}
       {currentScreen === 'results' && resultsData && (
-        <ResultsScreen resultsData={resultsData} onRestart={restartQuiz} />
+        <ResultsScreen resultsData={resultsData} userName={userName} onRestart={restartQuiz} />
       )}
     </LayoutWrapper>
   );

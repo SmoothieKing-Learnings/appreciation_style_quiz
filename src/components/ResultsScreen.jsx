@@ -3,13 +3,16 @@ import { Share2, RotateCcw } from 'lucide-react';
 import { exportAndShare } from '../skills/exportAndShare';
 import { announceToScreenReader } from '../skills/a11yUtils';
 
-export default function ResultsScreen({ resultsData, onRestart }) {
+export default function ResultsScreen({ resultsData, userName, onRestart }) {
   const { allScores, topStyles } = resultsData;
+  const trimmedName = (userName || '').trim();
+  const hasName = trimmedName.length > 0;
 
   useEffect(() => {
     const styleNames = topStyles.map(s => s.name).join(' and ');
-    announceToScreenReader(`Quiz complete. Your primary appreciation style is ${styleNames}.`);
-  }, [topStyles]);
+    const subject = hasName ? `${trimmedName}'s` : 'Your';
+    announceToScreenReader(`Quiz complete. ${subject} primary appreciation style is ${styleNames}.`);
+  }, [topStyles, trimmedName, hasName]);
 
   const handleShare = () => {
     exportAndShare('result-capture-area', 'my-appreciation-style.png');
@@ -23,12 +26,12 @@ export default function ResultsScreen({ resultsData, onRestart }) {
       {/* CAPTURE AREA */}
       <div id="result-capture-area" className="w-full flex flex-col items-center p-2 sm:p-4 md:p-6 rounded-2xl">
         <h2 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-2">
-          Your Results
+          {hasName ? `${trimmedName}'s Appreciation Style` : 'Your Results'}
         </h2>
 
         {isTie ? (
           <h1 className="font-heading text-3xl md:text-4xl font-black text-quiz-text mb-2 text-center">
-            You have a Hybrid Appreciation Style
+            {hasName ? `${trimmedName} has a Hybrid Appreciation Style` : 'You have a Hybrid Appreciation Style'}
           </h1>
         ) : (
           <h1 className="font-heading text-3xl md:text-5xl font-black text-quiz-text mb-2 text-center">
@@ -38,7 +41,8 @@ export default function ResultsScreen({ resultsData, onRestart }) {
 
         {isTie && (
           <p className="text-base font-medium text-quiz-text/80 mb-6 text-center">
-            Your primary styles are {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' and ', curr])}
+            {hasName ? 'Primary styles: ' : 'Your primary styles are '}
+            {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' and ', curr])}
           </p>
         )}
 
