@@ -95,7 +95,11 @@ export default function WelcomeScreen({ onStart }) {
 
         <button
           type="submit"
-          className="w-full min-h-[44px] px-8 py-4 mt-0 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-lg hover:shadow-xl active:scale-95"
+          className={`w-full min-h-[44px] px-8 py-4 mt-0 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all
+            ${canSubmit
+              ? 'opacity-100 shadow-lg hover:bg-[#7a0014] hover:shadow-xl active:scale-95'
+              : 'opacity-40 shadow-none'
+            }`}
           aria-label="Start the Appreciation Style Quiz"
         >
           Let's Blend!
