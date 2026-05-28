@@ -70,12 +70,12 @@ export default function WelcomeScreen({ onStart }) {
 
       {/* Element 2 — headline (rises from below) */}
       <motion.h1
-        className="font-heading text-2xl md:text-4xl font-extrabold text-quiz-primary mb-4 tracking-tight"
+        className="font-heading text-3xl md:text-5xl font-extrabold text-quiz-primary mb-4 tracking-tight"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.20, duration: 0.45 }}
       >
-        Discover Your Appreciation Style
+        Discover Types of Appreciation
       </motion.h1>
 
       {/* Element 3 — divider (horizontal reveal) */}
@@ -142,7 +142,7 @@ export default function WelcomeScreen({ onStart }) {
                 ? 'opacity-100 shadow-lg hover:bg-brand-dark hover:shadow-xl active:scale-95'
                 : 'opacity-40 shadow-none'
               }`}
-            aria-label="Start the Appreciation Style Quiz"
+            aria-label="Start the appreciation quiz"
           >
             Let's Blend!
           </button>

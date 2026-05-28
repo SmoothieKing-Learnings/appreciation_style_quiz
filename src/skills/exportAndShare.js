@@ -27,12 +27,12 @@ export const exportAndShare = async (
 
   // Build the share text. Falls back to a generic "my" when no name is provided.
   const subject = userName ? `${userName}'s` : 'my';
-  const styleSentence = styleName ? ` My appreciation style is ${styleName}.` : '';
-  const shareTitle = userName ? `${userName}'s Appreciation Style` : 'My Appreciation Style';
+  const styleSentence = styleName ? ` My type of appreciation is ${styleName}.` : '';
+  const shareTitle = userName ? `${userName}'s Type of Appreciation` : 'My Type of Appreciation';
   // URL is appended to the text only. We intentionally do NOT also pass it
   // as the `url` field — receivers that honor both render the link twice
   // (once inline from text, once as a preview card from `url`).
-  const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence} ${QUIZ_URL}`;
+  const shareText = `Check out ${subject} Type of Appreciation!${styleSentence} ${QUIZ_URL}`;
 
   try {
     const canvas = await html2canvas(element, {
