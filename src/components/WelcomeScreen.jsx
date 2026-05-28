@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
 import { isEmbedded } from '../skills/embed';
 
@@ -56,17 +57,55 @@ export default function WelcomeScreen({ onStart }) {
   };
 
   return (
-    <div className={`w-full animate-fade-in flex flex-col items-center ${embedded ? 'min-h-[80vh] justify-center' : ''}`}>
-      <img src={logo} alt="Smoothie King Logo" className="w-24 h-auto mb-5 animate-fade-in" />
-      <h1 className="font-heading text-2xl md:text-4xl font-extrabold text-quiz-primary mb-6 tracking-tight">
-        Discover Your Appreciation Style
-      </h1>
-      <p className="text-base md:text-lg text-quiz-text/80 mb-8 max-w-md">
-        Take this short assessment to discover how you most feel valued and appreciated at work.
-      </p>
+    <div className={`w-full flex flex-col items-center ${embedded ? 'min-h-[80vh] justify-center' : ''}`}>
+      {/* Element 1 — logo (delayed slightly, comes from above) */}
+      <motion.img
+        src={logo}
+        alt="Smoothie King Logo"
+        className="w-24 h-auto mb-5"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.10, duration: 0.45, ease: 'easeOut' }}
+      />
 
+      {/* Element 2 — headline (rises from below) */}
+      <motion.h1
+        className="font-heading text-2xl md:text-4xl font-extrabold text-quiz-primary mb-4 tracking-tight"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.20, duration: 0.45 }}
+      >
+        Discover Your Appreciation Style
+      </motion.h1>
+
+      {/* Element 3 — divider (horizontal reveal) */}
+      <motion.div
+        aria-hidden="true"
+        className="h-0.5 w-16 bg-quiz-primary origin-center mb-4"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ delay: 0.30, duration: 0.40, ease: 'easeOut' }}
+      />
+
+      {/* Element 4 — body text */}
+      <motion.p
+        className="text-base md:text-lg text-quiz-text/80 mb-6 max-w-md"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.38, duration: 0.40 }}
+      >
+        Take this short assessment to discover how you most feel valued and appreciated at work.
+      </motion.p>
+
+      {/* Element 5 — CTAs block */}
       {/* gap-1 = 4px so input ↔ CTA ↔ helper all sit on the same 4px rhythm */}
-      <form onSubmit={handleSubmit} className="w-full max-w-sm flex flex-col items-stretch gap-1">
+      <motion.form
+        onSubmit={handleSubmit}
+        className="w-full max-w-sm flex flex-col items-stretch gap-1"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.50, duration: 0.40 }}
+      >
         <label htmlFor="user-name" className="text-sm font-semibold text-quiz-text text-left">
           Enter your name to start the quiz
         </label>
@@ -108,7 +147,7 @@ export default function WelcomeScreen({ onStart }) {
         <p id="user-name-hint" className="text-xs text-quiz-text/50 text-center">
           Used only in your results headline. Not stored anywhere.
         </p>
-      </form>
+      </motion.form>
     </div>
   );
 }
