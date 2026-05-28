@@ -1,11 +1,30 @@
 import html2canvas from 'html2canvas';
 
-export const exportAndShare = async (elementId, filename = 'appreciation-style-result.png') => {
+/**
+ * Capture an element as PNG and trigger the Web Share sheet (or download fallback).
+ *
+ * @param {string} elementId  ID of the DOM node to screenshot.
+ * @param {string} filename   File name for the PNG.
+ * @param {object} [options]
+ * @param {string} [options.userName]   Personalizes the share text — e.g. "Sarah".
+ * @param {string} [options.styleName]  Top style name (or joined "X and Y" for ties).
+ */
+export const exportAndShare = async (
+  elementId,
+  filename = 'appreciation-style-result.png',
+  { userName = '', styleName = '' } = {}
+) => {
   const element = document.getElementById(elementId);
   if (!element) {
     console.error(`Element with id ${elementId} not found`);
     return;
   }
+
+  // Build the share text. Falls back to a generic "my" when no name is provided.
+  const subject = userName ? `${userName}'s` : 'my';
+  const styleSentence = styleName ? ` My appreciation style is ${styleName}.` : '';
+  const shareTitle = userName ? `${userName}'s Appreciation Style` : 'My Appreciation Style';
+  const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence}`;
 
   try {
     const canvas = await html2canvas(element, {
@@ -26,8 +45,8 @@ export const exportAndShare = async (elementId, filename = 'appreciation-style-r
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
-            title: 'My Appreciation Style',
-            text: 'Check out my Appreciation Style Profile!',
+            title: shareTitle,
+            text: shareText,
             files: [file]
           });
           return;

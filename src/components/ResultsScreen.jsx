@@ -15,7 +15,13 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
   }, [topStyles, trimmedName, hasName]);
 
   const handleShare = () => {
-    exportAndShare('result-capture-area', 'my-appreciation-style.png');
+    // For ties, join top style names with " and " so the share text reads
+    // "My appreciation style is Words of Affirmation and Quality Time."
+    const styleName = topStyles.map((s) => s.name).join(' and ');
+    exportAndShare('result-capture-area', 'my-appreciation-style.png', {
+      userName: trimmedName,
+      styleName,
+    });
   };
 
   const isTie = topStyles.length > 1;
