@@ -24,7 +24,15 @@ export const exportAndShare = async (
   const subject = userName ? `${userName}'s` : 'my';
   const styleSentence = styleName ? ` My appreciation style is ${styleName}.` : '';
   const shareTitle = userName ? `${userName}'s Appreciation Style` : 'My Appreciation Style';
-  const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence}`;
+  // Canonical quiz URL derived from window.location + Vite base path so it
+  // stays correct on local dev, the GitHub Pages site, and inside any iframe.
+  const quizUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}${import.meta.env.BASE_URL || '/'}`
+    : '';
+  // URL is appended to the text (receivers that strip the `url` field when
+  // `files` is present still surface it this way) AND passed as `url` so
+  // receivers that do use it can preview/link it cleanly.
+  const shareText = `Check out ${subject} Appreciation Style Profile!${styleSentence}${quizUrl ? ` ${quizUrl}` : ''}`;
 
   try {
     const canvas = await html2canvas(element, {
@@ -47,6 +55,7 @@ export const exportAndShare = async (
           await navigator.share({
             title: shareTitle,
             text: shareText,
+            url: quizUrl || undefined,
             files: [file]
           });
           return;
