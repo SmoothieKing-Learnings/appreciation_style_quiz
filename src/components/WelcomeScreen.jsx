@@ -102,7 +102,7 @@ export default function WelcomeScreen({ onStart }) {
         onSubmit={handleSubmit}
         className="w-full max-w-sm flex flex-col items-stretch gap-1"
       >
-        <label htmlFor="user-name" className="text-sm font-semibold text-quiz-text text-left">
+        <label htmlFor="user-name" className="text-sm font-semibold text-quiz-text text-center">
           Enter your name to start the quiz
         </label>
         <input
@@ -115,13 +115,13 @@ export default function WelcomeScreen({ onStart }) {
           maxLength={NAME_MAX}
           value={name}
           onChange={handleChange}
-          placeholder="e.g. Sarah"
+          placeholder="Enter your name"
           // Inline 17px font-size is required regardless of viewport so iOS
           // Safari never auto-zooms on focus (its threshold is < 16px).
           style={{ fontSize: '17px' }}
           aria-invalid={showInvalid || undefined}
           aria-describedby="user-name-hint"
-          className={`w-full min-h-[44px] px-4 py-3 bg-white border-2 rounded-xl text-quiz-text placeholder-quiz-text/40 focus:outline-none transition-colors
+          className={`w-full min-h-[44px] px-4 py-3 bg-white border-2 rounded-xl text-quiz-text placeholder-quiz-text/40 text-center focus:outline-none transition-colors
             ${showInvalid
               ? 'border-error bg-error-light focus:border-error focus:ring-2 focus:ring-error-soft'
               : 'border-orange-100 focus:border-quiz-primary focus:ring-2 focus:ring-quiz-primary/30'
