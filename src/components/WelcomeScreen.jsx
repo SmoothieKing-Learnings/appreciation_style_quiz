@@ -100,7 +100,7 @@ export default function WelcomeScreen({ onStart }) {
       {/* gap-1 = 4px so input ↔ CTA ↔ helper all sit on the same 4px rhythm */}
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm flex flex-col items-stretch gap-1"
+        className="w-full flex flex-col items-stretch gap-1"
       >
         <label htmlFor="user-name" className="text-sm font-semibold text-quiz-text text-center">
           Enter your name to start the quiz
