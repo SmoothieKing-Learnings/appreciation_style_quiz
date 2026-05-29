@@ -3,7 +3,9 @@ import html2canvas from 'html2canvas';
 // Canonical public URL of the quiz. Pinned so the share message always
 // directs recipients to the live GitHub Pages site, regardless of whether
 // the share is triggered from local dev, the live site, or a Rise 360 iframe.
-const QUIZ_URL = 'https://smoothieking-learnings.github.io/appreciation_style_quiz/';
+// Exported so the iframe "Open to share" button on ResultsScreen can build
+// the rehydration URL (`?scores=…&name=…`) against the same canonical host.
+export const QUIZ_URL = 'https://smoothieking-learnings.github.io/appreciation_style_quiz/';
 
 /**
  * Capture an element as PNG and trigger the Web Share sheet (or download fallback).

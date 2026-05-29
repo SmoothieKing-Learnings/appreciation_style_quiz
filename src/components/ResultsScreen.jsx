@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Share2, RotateCcw } from 'lucide-react';
-import { exportAndShare } from '../skills/exportAndShare';
+import { ExternalLink, Share2, RotateCcw } from 'lucide-react';
+import { exportAndShare, QUIZ_URL } from '../skills/exportAndShare';
 import { announceToScreenReader } from '../skills/a11yUtils';
+import { isEmbedded } from '../skills/embed';
 import OtherTypesModal from './OtherTypesModal';
 import { STYLES } from '../data/stylesData';
 
@@ -13,6 +14,11 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
   // "Explore the other types" modal state. Trigger button auto-hides when
   // no "other" types remain (e.g. all 5 styles tied at the top — rare).
   const [otherTypesOpen, setOtherTypesOpen] = useState(false);
+  // Status of the iframe "Open to share" handoff. 'idle' before the user
+  // clicks, 'opened' after a successful window.open (guides them to switch
+  // tabs), 'blocked' if the browser refused to open the popup (offers a
+  // retry).
+  const [openStatus, setOpenStatus] = useState('idle');
   // Set of top-style ids — used both to gate the footer "Explore" link and to
   // mark non-top stacked-bar segments as clickable shortcuts into the modal.
   const topIds = useMemo(() => new Set(topStyles.map(s => s.id)), [topStyles]);
@@ -35,6 +41,37 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
       userName: trimmedName,
       styleName,
     });
+  };
+
+  // Inside an iframe (notably Rise 360), `navigator.share()` and the
+  // <a download> fallback both silently fail. We swap the Share button for
+  // "Open to share", which opens the canonical live URL in a new tab with
+  // the user's scores + name encoded — the new tab rehydrates the Results
+  // screen and its Share button works normally there.
+  const embedded = isEmbedded();
+  const handleOpenToShare = () => {
+    const scoresParam = allScores
+      .filter(s => s.score > 0)
+      .map(s => `${s.id}:${s.score}`)
+      .join(',');
+    const params = new URLSearchParams();
+    if (scoresParam) params.set('scores', scoresParam);
+    if (trimmedName) params.set('name', trimmedName);
+    const target = `${QUIZ_URL}?${params.toString()}`;
+    // Note: deliberately NOT passing 'noopener,noreferrer' as the third
+    // argument because that forces window.open to return null, which would
+    // mask popup-block failures. Instead, get the window reference, detect
+    // block via null check, then manually strip opener to remove the
+    // reverse-reference. Same-origin (the new tab loads the canonical
+    // QUIZ_URL on the same host as this iframe), so opener strip is
+    // reliable here.
+    const newWindow = window.open(target, '_blank');
+    if (newWindow) {
+      try { newWindow.opener = null; } catch (_) { /* cross-origin guard */ }
+      setOpenStatus('opened');
+    } else {
+      setOpenStatus('blocked');
+    }
   };
 
   // Proportional stacked-bar data — all 5 styles, sorted high → low so the
@@ -157,13 +194,23 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
 
       {/* ACTION BUTTONS (Outside Capture Area) */}
       <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-4 sm:mt-6">
-        <button
-          onClick={handleShare}
-          className="w-full max-w-[280px] sm:flex-1 sm:max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
-          aria-label="Share or download my result image"
-        >
-          <Share2 size={20} /> Share Result
-        </button>
+        {embedded ? (
+          <button
+            onClick={handleOpenToShare}
+            className="w-full max-w-[280px] sm:flex-1 sm:max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+            aria-label="Open the quiz in a new tab to share your result"
+          >
+            <ExternalLink size={20} /> Open to share
+          </button>
+        ) : (
+          <button
+            onClick={handleShare}
+            className="w-full max-w-[280px] sm:flex-1 sm:max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+            aria-label="Share or download my result image"
+          >
+            <Share2 size={20} /> Share Result
+          </button>
+        )}
 
         <button
           onClick={onRestart}
@@ -173,6 +220,37 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
           <RotateCcw size={20} /> Retake Quiz
         </button>
       </div>
+
+      {/*
+        Status message for the iframe "Open to share" handoff. Persistent
+        (no auto-dismiss) so the participant has time to find the new tab.
+        Cleared automatically when the component unmounts (e.g. Retake Quiz).
+      */}
+      {embedded && openStatus === 'opened' && (
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-3 text-xs sm:text-sm text-quiz-text/70 text-center max-w-md mx-auto px-2"
+        >
+          We've opened your result in a new tab. Switch to it to share.
+        </p>
+      )}
+      {embedded && openStatus === 'blocked' && (
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-3 text-xs sm:text-sm text-quiz-primary text-center max-w-md mx-auto px-2"
+        >
+          Your browser blocked the new tab.{' '}
+          <button
+            type="button"
+            onClick={handleOpenToShare}
+            className="underline font-bold hover:no-underline focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 rounded px-1"
+          >
+            Try again
+          </button>
+        </p>
+      )}
 
       {/*
         "Explore the other types →" footer link — quiet, low-priority
