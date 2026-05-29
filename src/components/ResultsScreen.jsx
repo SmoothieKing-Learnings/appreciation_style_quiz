@@ -13,10 +13,13 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
   // "Explore the other types" modal state. Trigger button auto-hides when
   // no "other" types remain (e.g. all 5 styles tied at the top — rare).
   const [otherTypesOpen, setOtherTypesOpen] = useState(false);
-  const otherTypesAvailable = useMemo(() => {
-    const topIds = new Set(topStyles.map(s => s.id));
-    return STYLES.some(s => !topIds.has(s.id));
-  }, [topStyles]);
+  // Set of top-style ids — used both to gate the footer "Explore" link and to
+  // mark non-top stacked-bar segments as clickable shortcuts into the modal.
+  const topIds = useMemo(() => new Set(topStyles.map(s => s.id)), [topStyles]);
+  const otherTypesAvailable = useMemo(
+    () => STYLES.some(s => !topIds.has(s.id)),
+    [topIds]
+  );
 
   useEffect(() => {
     const styleNames = topStyles.map(s => s.name).join(' and ');
@@ -42,6 +45,7 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
     return [...allScores]
       .sort((a, b) => b.score - a.score)
       .map(s => ({
+        id: s.id,
         name: s.name,
         subtitle: s.subtitle,
         percentage: s.percentage,
@@ -71,21 +75,38 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
         */}
         <div
           className="w-full h-8 md:h-10 mt-4 flex bg-surface-track rounded-full overflow-hidden shadow-sm"
-          role="img"
+          role="group"
           aria-label={`Score breakdown. ${chartData.map(s => `${s.subtitle} ${s.percentage} percent`).join(', ')}.`}
         >
-          {chartData.filter(s => s.percentage > 0).map((s) => (
-            <div
-              key={s.name}
-              className="h-full"
-              style={{
-                flex: s.percentage,
-                backgroundColor: s.color,
-                minWidth: '4px',
-              }}
-              title={`${s.subtitle}: ${s.percentage}% (${s.score}/${s.maxPossible} pts)`}
-            />
-          ))}
+          {chartData.filter(s => s.percentage > 0).map((s) => {
+            // Non-top segments become buttons that open the OtherTypesModal so
+            // the learner can dig into the styles outside their primary result.
+            const isOther = !topIds.has(s.id) && otherTypesAvailable;
+            return (
+              <div
+                key={s.name}
+                className={`h-full transition-opacity ${isOther ? 'cursor-pointer hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-quiz-primary/60' : ''}`}
+                style={{
+                  flex: s.percentage,
+                  backgroundColor: s.color,
+                  minWidth: '4px',
+                }}
+                title={isOther
+                  ? `${s.subtitle}: ${s.percentage}% — tap to explore`
+                  : `${s.subtitle}: ${s.percentage}% (${s.score}/${s.maxPossible} pts)`}
+                role={isOther ? 'button' : undefined}
+                tabIndex={isOther ? 0 : undefined}
+                aria-label={isOther ? `Explore ${s.subtitle}, ${s.percentage} percent` : undefined}
+                onClick={isOther ? () => setOtherTypesOpen(true) : undefined}
+                onKeyDown={isOther ? (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setOtherTypesOpen(true);
+                  }
+                } : undefined}
+              />
+            );
+          })}
         </div>
 
         {/* LEGEND — color swatch + subtitle + percentage, horizontal wrap.
@@ -109,7 +130,7 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
             {hasName ? `${trimmedName} has a Hybrid Appreciation Style` : 'You have a Hybrid Appreciation Style'}
           </h1>
         ) : (
-          <h1 className="font-heading text-3xl font-black text-quiz-text mb-2 text-center">
+          <h1 className="font-heading text-3xl font-black text-quiz-text mb-6 text-center">
             {topStyles[0].name}
           </h1>
         )}

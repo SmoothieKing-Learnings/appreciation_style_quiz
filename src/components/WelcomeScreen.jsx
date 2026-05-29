@@ -115,7 +115,7 @@ export default function WelcomeScreen({ onStart }) {
           maxLength={NAME_MAX}
           value={name}
           onChange={handleChange}
-          placeholder="Enter your name"
+          placeholder="Your name"
           // Inline 17px font-size is required regardless of viewport so iOS
           // Safari never auto-zooms on focus (its threshold is < 16px).
           style={{ fontSize: '17px' }}
