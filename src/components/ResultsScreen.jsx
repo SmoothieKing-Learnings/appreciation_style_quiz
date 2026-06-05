@@ -163,17 +163,17 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
         </div>
 
         {isTie ? (
-          <h1 className="font-heading text-xs font-black text-quiz-text mb-2 text-center">
+          <h1 className="font-heading text-xs font-bold text-quiz-text mb-2 text-center">
             {hasName ? `${trimmedName} has a Hybrid Appreciation Style` : 'You have a Hybrid Appreciation Style'}
           </h1>
         ) : (
-          <h1 className="font-heading text-3xl font-black text-quiz-text mb-6 text-center">
+          <h1 className="font-heading text-3xl font-bold text-quiz-text mb-6 text-center">
             {topStyles[0].name}
           </h1>
         )}
 
         {isTie && (
-          <p className="text-xs text-quiz-text/80 mb-6 text-center">
+          <p className="text-xs text-quiz-text mb-6 text-center">
             {hasName ? 'Primary styles: ' : 'Your primary styles are '}
             {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' and ', curr])}
           </p>
@@ -183,7 +183,7 @@ export default function ResultsScreen({ resultsData, userName, onRestart }) {
         <div className="w-full flex flex-col gap-3 text-left">
           {topStyles.map((style) => (
             <div key={style.id} className="overflow-hidden">
-              <p className="text-xs text-quiz-text/80 leading-relaxed">
+              <p className="text-xs text-quiz-text leading-relaxed">
                 {style.description}
               </p>
             </div>

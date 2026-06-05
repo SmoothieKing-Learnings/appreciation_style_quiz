@@ -39,18 +39,18 @@ export const STYLES = [
   },
   {
     id: 'tangible_gifts',
-    name: 'Tangible Gifts',
-    subtitle: 'Tangible Gifts',
+    name: 'Receiving Gifts',
+    subtitle: 'Receiving Gifts',
     summary: 'It\'s not about the dollar amount — it\'s about the fact that someone noticed and remembered. A small, specific gesture tells you that your effort was seen and worth marking. The note, the card, the small thing you can hold onto.',
     description: 'It\'s not about the dollar amount, it\'s about the fact that someone noticed and remembered. A small, specific gesture tells you that your effort was seen and worth marking. You hold onto things: the note, the card, the small moment someone took the time to make real. Share this with your manager: what stays with you isn\'t the size of the gesture, it\'s the specificity and something to remember it by. The more it proves they were paying attention to you personally, the more it means.',
     color: STYLE_COLORS.tangible_gifts
   },
   {
     id: 'physical_touch',
-    name: 'Physical Touch',
-    subtitle: 'Physical Touch',
-    summary: 'You run on shared energy. A fist-bump after a tough rush, a high-five at a team win, a quick shoulder tap in a hard moment — these tell you you went through something together. You\'re most motivated when the team wins as a unit.',
-    description: 'You run on shared energy. A fist-bump after a tough rush, a high-five when the team hits a goal, a quick shoulder tap in a hard moment, these feel like real confirmation that you went through something together. You\'re most motivated when the team wins as a unit. Share this with your manager: the physical signals of a shared win are what connect you to the team and remind you that what you\'re doing here actually matters.',
+    name: 'Celebratory Energy',
+    subtitle: 'Celebratory Energy',
+    summary: 'You run on shared energy. A fist-bump after a tough rush, a high-five at a team win, a shared laugh in a hard moment — these tell you you went through something together. You\'re most motivated when the team wins as a unit.',
+    description: 'You run on shared energy. A fist-bump after a tough rush, a high-five when the team hits a goal, a shared laugh in a hard moment, these feel like real confirmation that you went through something together. You\'re most motivated when the team wins as a unit. Share this with your manager: the energy of a shared win is what connects you to the team and reminds you that what you\'re doing here actually matters.',
     color: STYLE_COLORS.physical_touch
   }
 ];

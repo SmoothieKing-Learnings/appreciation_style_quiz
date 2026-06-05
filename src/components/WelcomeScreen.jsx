@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
-import { isEmbedded } from '../skills/embed';
 
 const NAME_MAX = 40;
 
 export default function WelcomeScreen({ onStart }) {
-  // When embedded, fill the iframe viewport vertically and center content.
   // Welcome content is short, so vertical centering is safe (no overflow).
-  const embedded = isEmbedded();
+  // The h-[640px] wrapper below matches the QuizScreen's fixed height
+  // rule — keeps the iframe content stack identical across welcome → quiz
+  // transitions so embedders (Rise 360 etc.) see no jump in card height.
   const [name, setName] = useState('');
   // Becomes true once the user clicks the CTA with no name; turns the input
   // border red until the user starts typing again.
@@ -57,7 +57,7 @@ export default function WelcomeScreen({ onStart }) {
   };
 
   return (
-    <div className={`w-full flex flex-col items-center ${embedded ? 'min-h-[80vh] justify-center' : ''}`}>
+    <div className="w-full h-[640px] flex flex-col items-center justify-center">
       {/* Element 1 — logo (delayed slightly, comes from above) */}
       <motion.img
         src={logo}
@@ -70,7 +70,7 @@ export default function WelcomeScreen({ onStart }) {
 
       {/* Element 2 — headline (rises from below) */}
       <motion.h1
-        className="font-heading text-[36px] font-extrabold text-quiz-primary mb-4 tracking-tight"
+        className="font-heading text-[36px] font-bold text-quiz-text mb-4 tracking-tight"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.20, duration: 0.45 }}
@@ -89,7 +89,7 @@ export default function WelcomeScreen({ onStart }) {
 
       {/* Element 4 — body text */}
       <motion.p
-        className="text-base md:text-lg text-quiz-text/80 mb-6 max-w-md"
+        className="text-base md:text-lg text-quiz-text mb-6 max-w-md"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.38, duration: 0.40 }}
